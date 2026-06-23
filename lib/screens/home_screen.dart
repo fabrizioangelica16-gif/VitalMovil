@@ -4,6 +4,7 @@ import '../providers/mascota_provider.dart';
 import '../widgets/mascota_robot.dart';
 import '../models/mascota_dialogos.dart';
 import 'vital_signs_input_screen.dart';
+import 'health_centers_map_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -63,7 +64,10 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
-        onTap: (index) => setState(() => _selectedIndex = index),
+        onTap: (index) {
+          setState(() => _selectedIndex = index);
+          _handleNavigation(index);
+        },
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Inicio'),
           BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'Vitales'),
@@ -72,6 +76,34 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
     );
+  }
+
+  void _handleNavigation(int index) {
+    switch (index) {
+      case 0:
+        break;
+      case 1:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const VitalSignsInputScreen(),
+          ),
+        );
+        break;
+      case 2:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const HealthCentersMapScreen(),
+          ),
+        );
+        break;
+      case 3:
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Perfil en desarrollo 👤')),
+        );
+        break;
+    }
   }
 
   Widget _buildBotonesInicio(
@@ -94,18 +126,21 @@ class _HomeScreenState extends State<HomeScreen> {
         const SizedBox(height: 15),
         _buildBotonPrincipal(
           icon: Icons.location_on,
-          label: 'Centros de Salud',
+          label: 'Centros de Salud Cercanos',
           color: Colors.green,
           onPressed: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Mapa en desarrollo 🗺️')),
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const HealthCentersMapScreen(),
+              ),
             );
           },
         ),
         const SizedBox(height: 15),
         _buildBotonPrincipal(
           icon: Icons.history,
-          label: 'Historial',
+          label: 'Historial de Mediciones',
           color: Colors.orange,
           onPressed: () {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -116,7 +151,7 @@ class _HomeScreenState extends State<HomeScreen> {
         const SizedBox(height: 15),
         _buildBotonPrincipal(
           icon: Icons.school,
-          label: 'Aprende',
+          label: 'Aprende sobre Salud',
           color: Colors.purple,
           onPressed: () {
             mascotaProvider.mostrarTip(MascotaDialogos.obtenerTip());
